@@ -12,7 +12,7 @@ export default function App() {
 
   onMount(async () => {
     try {
-      const res = await fetch('/auth/me');
+      const res = await fetch('https://api.softboy.site/auth/me');
       const data = await res.json();
       if (data?.discord_id) setUser(data);
     } catch (e) {}
