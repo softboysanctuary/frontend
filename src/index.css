@@ -1,0 +1,55 @@
+@import 'tailwindcss';
+
+:root {
+  color-scheme: dark;
+  --color-sanctuary-dark: #020617;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-sanctuary-dark);
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+#root {
+  width: 100% !important;
+  min-height: 100vh;
+}
+
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(99, 102, 241, 0.12) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(168, 85, 247, 0.1) 0%,
+      transparent 40%
+    );
+  pointer-events: none;
+}
+
+@utility icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex-shrink: 0;
+  vertical-align: middle;
+  font-size: 1.5rem;
+}
+
+@utility icon-sm {
+  @apply icon;
+  font-size: 1.1rem;
+}
+
+::selection {
+  background-color: rgba(99, 102, 241, 0.3);
+  color: #fff;
+}
