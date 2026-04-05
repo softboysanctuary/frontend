@@ -18,7 +18,7 @@ export default function Navbar(props) {
     const top = window.screenY + (window.outerHeight - height) / 2;
 
     const popup = window.open(
-      '/auth/discord',
+      'https://api.softboy.site/auth/discord',
       'discord-auth',
       `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,status=no`
     );
@@ -71,7 +71,7 @@ export default function Navbar(props) {
                       {props.user().username}
                     </p>
                     <a
-                      href="/auth/logout"
+                      href="https://api.softboy.site/auth/logout"
                       class="flex items-center justify-end gap-1 text-[10px] font-bold tracking-widest text-slate-500 uppercase transition-colors hover:text-red-400">
                       <i class="bx bx-log-out-circle icon-sm"></i>
                       {STRINGS.nav.logoutBtn}
@@ -136,7 +136,7 @@ export default function Navbar(props) {
           <div class="mt-auto">
             <Show when={props.user()}>
               <a
-                href="/auth/logout"
+                href="https://api.softboy.site/auth/logout"
                 class="flex items-center gap-2 text-xs font-bold tracking-widest text-red-400 uppercase transition-colors hover:text-red-300">
                 <i class="bx bx-log-out-circle text-lg"></i>
                 {STRINGS.nav.logoutBtn}

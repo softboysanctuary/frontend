@@ -5,7 +5,7 @@ export const APP_CONFIG = {
   discordInvite: 'https://discord.gg/softboy',
   githubUrl: 'https://github.com/softboysanctuary/frontend',
   footerCopyright: 'Softboy Sanctuary',
-  authEndpoint: '/auth/discord',
+  authEndpoint: 'https://api.softboy.site/auth/discord',
   // TODO: Add other endpoints here...
 };
 
@@ -44,5 +44,3 @@ export const FEATURES = [
     icon: 'bx-check-shield',
   },
 ];
-
-export const NAV_LINKS = [{ label: 'Verification', href: '/auth/discord' }];

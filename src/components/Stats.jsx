@@ -3,7 +3,7 @@ import { createResource, Show } from 'solid-js';
 // Fetch cached stats from API (updates every ~10 minutes)
 const fetchStats = async () => {
   try {
-    const res = await fetch('/api/stats');
+    const res = await fetch('https://api.softboy.site/api/stats');
     return res.json();
   } catch (e) {
     console.error('Stats fetch failed', e);

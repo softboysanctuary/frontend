@@ -252,7 +252,7 @@ export default function App() {
             Don't be a <br /> stranger.
           </h2>
           <a
-            href="/auth/discord"
+            href="https://api.softboy.site/auth/discord/callback"
             class="inline-flex items-center gap-4 rounded-3xl bg-white px-12 py-6 text-2xl font-black text-indigo-600 shadow-xl transition-all hover:scale-105">
             <i class="bx bxl-discord-alt text-3xl"></i>
             {STRINGS.nav.joinBtn}
