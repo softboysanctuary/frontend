@@ -4,6 +4,7 @@ import { api } from '../lib/api';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
+  { label: 'Leaderboard', href: '/leaderboard' },
   // { label: 'SMP', href: '/smp' },
 ];
 
