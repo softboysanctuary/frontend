@@ -1,5 +1,6 @@
 import { Show, For, createSignal } from 'solid-js';
 import { APP_CONFIG, STRINGS } from '../lib/constants';
+import { api } from '../lib/api';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -9,76 +10,78 @@ const NAV_LINKS = [
 // All of this code is kind of ass, I hate the navbar.
 export default function Navbar(props) {
   const [isOpen, setIsOpen] = createSignal(false);
+  const [isLoggingIn, setIsLoggingIn] = createSignal(false);
 
   const handleDiscordLogin = (e) => {
     e.preventDefault();
-    const width = 500;
-    const height = 750;
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
+    if (isLoggingIn()) return;
 
-    const popup = window.open(
-      'https://api.softboy.site/auth/discord',
-      'discord-auth',
-      `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,status=no`
-    );
+    setIsLoggingIn(true);
+    const popup = api.loginWithDiscord();
 
-    const checkPopup = setInterval(() => {
+    const checkPopup = setInterval(async () => {
       if (!popup || popup.closed) {
         clearInterval(checkPopup);
-        window.location.reload();
+        setIsLoggingIn(false);
+
+        const userData = await api.getMe();
+        if (userData) {
+          props.setUser(userData);
+        }
       }
     }, 1000);
   };
 
   return (
     <>
-      <nav class="fixed top-0 right-0 left-0 z-[60] h-20 border-b border-white/5 bg-[#020617]/80 backdrop-blur-xl">
-        <div class="mx-auto flex h-full max-w-7xl flex-row items-center justify-between px-6">
+      <nav class="fixed inset-x-0 top-0 z-[60] h-20 border-b border-white/5 bg-[#020617]/70 backdrop-blur-2xl">
+        <div class="mx-auto flex h-full max-w-7xl items-center justify-between px-6">
           <div
-            class="group flex cursor-pointer items-center gap-3 text-xl font-extrabold tracking-tighter uppercase"
+            class="flex cursor-pointer items-center gap-2 text-2xl font-black tracking-tighter text-white uppercase italic transition-opacity hover:opacity-80"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <span class="text-white">{APP_CONFIG.name}</span>
+            {APP_CONFIG.name}
           </div>
 
-          <div class="flex items-center gap-4 md:gap-8">
-            <div class="hidden items-center gap-1 md:flex">
+          <div class="flex items-center gap-6">
+            <div class="hidden items-center gap-2 md:flex">
               <For each={NAV_LINKS}>
                 {(link) => (
                   <a
                     href={link.href}
-                    class="rounded-lg px-4 py-2 text-sm font-medium text-slate-400 transition-colors hover:bg-white/5 hover:text-white">
+                    class="rounded-lg px-4 py-2 text-sm font-bold tracking-wide text-slate-400 transition-all hover:text-white">
                     {link.label}
                   </a>
                 )}
               </For>
             </div>
 
-            <div class="flex items-center gap-3 md:gap-6">
+            <div class="flex items-center gap-4">
               <Show
                 when={props.user()}
                 fallback={
                   <button
                     onClick={handleDiscordLogin}
-                    class="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 transition-all hover:bg-indigo-500 active:scale-95 md:px-6 md:py-2.5 md:text-sm">
-                    <i class="bx bxl-discord-alt text-lg"></i>
-                    <span class="xs:block hidden">{STRINGS.nav.joinBtn}</span>
+                    class="group relative flex items-center gap-3 overflow-hidden rounded-xl bg-[#5865F2] px-6 py-2.5 text-sm font-black text-white shadow-[0_0_20px_rgba(88,101,242,0.4)] transition-all hover:scale-[1.03] hover:shadow-[#5865F2]/60 active:scale-95">
+                    <div class="absolute inset-0 flex h-full w-full [transform:skew(-20deg)_translateX(-120%)] justify-center group-hover:[transform:skew(-20deg)_translateX(120%)] group-hover:duration-[1.5s]">
+                      <div class="relative h-full w-12 bg-white/30 blur-sm" />
+                    </div>
+                    <i class="bx bxl-discord-alt text-xl"></i>
+                    <span class="tracking-tight">Login with Discord</span>
                   </button>
                 }>
-                <div class="flex items-center gap-3 border-l border-white/10 pl-4 md:gap-4 md:pl-6">
-                  <div class="hidden text-right leading-tight sm:block">
-                    <p class="text-sm font-bold text-white">
+                <div class="flex items-center gap-4 border-l border-white/10 pl-6">
+                  <div class="hidden text-right sm:block">
+                    <p class="mb-1 text-sm leading-none font-black text-white">
                       {props.user().username}
                     </p>
                     <a
                       href="https://api.softboy.site/auth/logout"
-                      class="flex items-center justify-end gap-1 text-[10px] font-bold tracking-widest text-slate-500 uppercase transition-colors hover:text-red-400">
-                      <i class="bx bx-log-out-circle icon-sm"></i>
+                      class="flex items-center justify-end gap-1 text-[10px] font-black tracking-widest text-red-500/80 uppercase transition-colors hover:text-red-400">
                       {STRINGS.nav.logoutBtn}
                     </a>
                   </div>
                   <img
-                    class="h-9 w-9 rounded-xl border border-indigo-500/30 object-cover p-0.5 ring-2 ring-transparent transition-all hover:ring-indigo-500/50 md:h-10 md:w-10"
+                    class="h-10 w-10 rounded-full border-2 border-indigo-500/40 object-cover p-0.5 transition-transform hover:scale-110"
                     src={`https://cdn.discordapp.com/avatars/${props.user().discord_id}/${props.user().avatar}.png`}
                     alt="Avatar"
                   />
@@ -97,47 +100,43 @@ export default function Navbar(props) {
 
       <div
         onClick={() => setIsOpen(false)}
-        class={`fixed inset-0 z-[54] bg-black/60 transition-opacity duration-300 md:hidden ${
-          isOpen()
-            ? 'pointer-events-auto opacity-100'
-            : 'pointer-events-none opacity-0'
-        }`}
+        class="fixed inset-0 z-[54] bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden"
+        classList={{
+          'opacity-100 pointer-events-auto': isOpen(),
+          'opacity-0 pointer-events-none': !isOpen(),
+        }}
       />
 
       <div
-        class={`fixed top-0 right-0 bottom-0 z-[55] w-64 transform border-l border-white/5 bg-[#020617] transition-transform duration-300 ease-in-out md:hidden ${
-          isOpen() ? 'translate-x-0' : 'translate-x-full'
-        }`}>
-        <div class="flex h-full flex-col p-8 pt-24">
-          <Show when={isOpen()}>
-            <img
-              src="/sbs.png"
-              alt="Logo"
-              class="mb-8 h-10 w-10 rounded-lg shadow-lg shadow-indigo-500/10"
-            />
-          </Show>
-
-          <div class="flex flex-col gap-4">
-            <p class="mb-2 text-[10px] font-bold tracking-[0.2em] text-slate-500 uppercase">
+        class="fixed top-0 right-0 bottom-0 z-[55] w-64 transform border-l border-white/10 bg-[#020617] p-8 pt-24 transition-transform duration-500 ease-out md:hidden"
+        classList={{
+          'translate-x-0': isOpen(),
+          'translate-x-full': !isOpen(),
+        }}>
+        <div class="flex h-full flex-col gap-8">
+          <div>
+            <p class="mb-4 text-[10px] font-black tracking-[0.3em] text-slate-600 uppercase">
               Navigation
             </p>
-            <For each={NAV_LINKS}>
-              {(link) => (
-                <a
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  class="text-xl font-bold tracking-tight text-white uppercase transition-colors hover:text-indigo-400">
-                  {link.label}
-                </a>
-              )}
-            </For>
+            <div class="flex flex-col gap-6">
+              <For each={NAV_LINKS}>
+                {(link) => (
+                  <a
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    class="text-2xl font-black tracking-tighter text-white uppercase transition-colors hover:text-indigo-400">
+                    {link.label}
+                  </a>
+                )}
+              </For>
+            </div>
           </div>
 
           <div class="mt-auto">
             <Show when={props.user()}>
               <a
                 href="https://api.softboy.site/auth/logout"
-                class="flex items-center gap-2 text-xs font-bold tracking-widest text-red-400 uppercase transition-colors hover:text-red-300">
+                class="flex items-center gap-2 text-xs font-black tracking-widest text-red-500 uppercase transition-colors hover:text-red-400">
                 <i class="bx bx-log-out-circle text-lg"></i>
                 {STRINGS.nav.logoutBtn}
               </a>

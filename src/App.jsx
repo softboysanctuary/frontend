@@ -2,6 +2,7 @@ import { createSignal, onMount, onCleanup, For } from 'solid-js';
 import Navbar from './components/Navbar';
 import Stats from './components/Stats';
 import Footer from './components/Footer';
+import { api } from './lib/api';
 import { FEATURES, STRINGS } from './lib/constants';
 
 export default function App() {
@@ -11,11 +12,11 @@ export default function App() {
   const handleScroll = () => setScrollY(window.scrollY);
 
   onMount(async () => {
-    try {
-      const res = await fetch('https://api.softboy.site/auth/me');
-      const data = await res.json();
-      if (data?.discord_id) setUser(data);
-    } catch (e) {}
+    const data = await api.getMe();
+    if (data?.discord_id) {
+      setUser(data);
+    }
+
     window.addEventListener('scroll', handleScroll);
   });
 
@@ -190,7 +191,7 @@ export default function App() {
         <div class="absolute top-0 left-0 h-full w-full bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5" />
       </div>
 
-      <Navbar user={user} />
+      <Navbar user={user} setUser={setUser} />
 
       <main class="relative z-10 mx-auto max-w-6xl px-6 pt-32 pb-20 md:pt-56">
         <header class="mb-24 flex flex-col items-center text-center md:mb-32">

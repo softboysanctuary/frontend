@@ -1,19 +1,9 @@
 import { createResource, Show } from 'solid-js';
-
-// Fetch cached stats from API (updates every ~10 minutes)
-const fetchStats = async () => {
-  try {
-    const res = await fetch('https://api.softboy.site/api/stats');
-    return res.json();
-  } catch (e) {
-    console.error('Stats fetch failed', e);
-    return null;
-  }
-};
+import { api } from '../lib/api';
 
 // The fancy shit that actually displays it
 export default function Stats() {
-  const [stats] = createResource(fetchStats);
+  const [stats] = createResource(api.getStats);
 
   return (
     <div class="mb-12 flex w-full flex-col items-center gap-6">
