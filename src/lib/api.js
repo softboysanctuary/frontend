@@ -73,12 +73,4 @@ export const api = {
   async getStats() {
     return await request('/api/stats');
   },
-  // Fetch profile
-  getProfile: (id) => request(`/api/profiles/${id}`),
-  // Update profile
-  updateProfile: (data) =>
-    request('/api/profiles/update', {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    }),
 };
