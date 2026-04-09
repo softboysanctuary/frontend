@@ -2,6 +2,7 @@ import { render } from 'solid-js/web';
 import { Router, Route } from '@solidjs/router';
 import App from './App';
 import Leaderboard from './pages/Leaderboard';
+import { MetaProvider } from '@solidjs/meta';
 import './index.css';
 
 const root = document.getElementById('root');
@@ -14,10 +15,12 @@ if (import.meta.env.DEV && !root) {
 
 render(
   () => (
+    <MetaProvider>
     <Router>
       <Route path="/" component={App} />
       <Route path="/leaderboard" component={Leaderboard} />
     </Router>
+    </MetaProvider>
   ),
   root
 );
