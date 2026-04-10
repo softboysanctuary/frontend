@@ -48,6 +48,8 @@ export default function Reviews(props) {
       
       const el = document.getElementById('review-form');
       el?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+       api.loginWithDiscord();
     }
   });
 
