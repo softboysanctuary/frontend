@@ -14,7 +14,8 @@
     "@solidjs/router": "^0.16.1",
     "marked": "^17.0.5",
     "sass": "^1.98.0",
-    "solid-js": "^1.9.11"
+    "solid-js": "^1.9.11",
+    "temporal-polyfill": "^0.3.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
