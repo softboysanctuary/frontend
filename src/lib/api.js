@@ -73,4 +73,30 @@ export const api = {
   async getStats() {
     return await request('/api/stats');
   },
+  // Fetch all reviews
+  async getReviews() {
+    return await request('/api/reviews');
+  },
+
+  // Submit a new review
+  async postReview(data) {
+    return await request('/api/reviews', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  // Edit an existing review
+  async putReview(id, data) {
+    return await request(`/api/reviews/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  // Delete a review
+  async deleteReview(id) {
+    return await request(`/api/reviews/${id}`, {
+      method: 'DELETE',
+    });
+  },
 };

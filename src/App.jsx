@@ -1,6 +1,7 @@
 import { createSignal, onMount, onCleanup, For } from 'solid-js';
 import Navbar from './components/Navbar';
 import Stats from './components/Stats';
+import Reviews from './components/Reviews';
 import Footer from './components/Footer';
 import Background from './components/Background';
 import { api } from './lib/api';
@@ -36,6 +37,7 @@ export default function App() {
             {STRINGS.hero.description}
           </p>
           <Stats />
+          <Reviews user={user} />
         </header>
         {/* Info*/}
         <section class="mb-32 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mb-40 md:grid-cols-4">

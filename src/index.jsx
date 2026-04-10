@@ -16,10 +16,10 @@ if (import.meta.env.DEV && !root) {
 render(
   () => (
     <MetaProvider>
-    <Router>
-      <Route path="/" component={App} />
-      <Route path="/leaderboard" component={Leaderboard} />
-    </Router>
+      <Router>
+        <Route path="/" component={App} />
+        <Route path="/leaderboard" component={Leaderboard} />
+      </Router>
     </MetaProvider>
   ),
   root
