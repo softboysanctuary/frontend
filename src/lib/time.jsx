@@ -91,20 +91,31 @@ export function timeAgo(timestampMs) {
 
       // Special case: show "Yesterday at ..."
       if (start.toPlainDate().equals(yesterday.toPlainDate())) {
-        return `Yesterday at ${formatters().datetime.mediumDate.format(start).split(',')[1]}`;
+        const timePart = start.toLocaleString('en-US', { 
+          hour: 'numeric', 
+          minute: '2-digit', 
+          hour12: true 
+        });
+        return `Yesterday at ${timePart}`;
       }
 
-      return formatters().datetime.mediumDate.format(start);
+      return start.toLocaleString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
     }
 
     // Otherwise use RelativeTimeFormat ("X minutes ago")
-    const rounded = roundDuration(elapsed, start);
+    const relativeFormatter = new Intl.RelativeTimeFormat('en-US', { numeric: 'always' });
+    const totalHours = Math.floor(Math.abs(elapsed.total({ unit: 'hours' })));
+    const totalMinutes = Math.floor(Math.abs(elapsed.total({ unit: 'minutes' })));
 
-    // Negative value is required because RelativeTimeFormat expects past values
-    return formatters().relative.format(
-      -Math.floor(rounded.duration[rounded.smallestUnit]),
-      rounded.smallestUnit.replace(/s$/, '')
-    );
+    if (totalHours >= 1) {
+      return relativeFormatter.format(-totalHours, 'hour');
+    }
+
+    return relativeFormatter.format(-totalMinutes, 'minute');
   } catch (e) {
     console.error('TimeAgo Error:', e);
     return 'Unknown time';
